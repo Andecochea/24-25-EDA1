@@ -15,7 +15,6 @@ public class Fila {
         System.out.println("La fila ha sido abierta.");
     }
 
-
     public void agregarPersona(String nombre) {
         if (contador < capacidad) {
             personas[contador] = nombre;
@@ -32,7 +31,6 @@ public class Fila {
             for (int i = 1; i < contador; i++) {
                 personas[i - 1] = personas[i];
             }
-
             contador--;
             System.out.println(personaAtendida + " ha sido atendida.");
         } else {
@@ -40,8 +38,6 @@ public class Fila {
         }
     }
 
-    
-    
     public void eliminarPersona(String nombre) {
         for (int i = 0; i < contador; i++) {
             if (personas[i].equals(nombre)) {
@@ -55,7 +51,6 @@ public class Fila {
         }
         System.out.println("No se encuentra " + nombre + " en la fila.");
     }
-
 
     public void traerCosas(String nombre) {
         for (int i = 0; i < contador; i++) {
@@ -114,9 +109,7 @@ public class Fila {
                     break;
             }
             mensajeMuchaGente();
-
         }
-
     }
 
     public static void main(String[] args) {
@@ -124,6 +117,4 @@ public class Fila {
         fila.abrirFila();
         fila.simularAcciones();
     }
-
 }
-    
