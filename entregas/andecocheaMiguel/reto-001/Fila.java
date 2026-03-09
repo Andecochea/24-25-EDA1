@@ -15,11 +15,9 @@ public class Fila {
         System.out.println("La fila ha sido abierta.");
     }
 
-
     public void agregarPersona(String nombre) {
         if (contador < capacidad) {
-            personas[contador] = nombre;
-            contador++;
+            personas[contador++] = nombre;
             System.out.println(nombre + " ha llegado a la fila.");
         } else {
             System.out.println("La fila está llena.");
@@ -29,26 +27,17 @@ public class Fila {
     public void atenderPersona() {
         if (contador > 0) {
             String personaAtendida = personas[0];
-            for (int i = 1; i < contador; i++) {
-                personas[i - 1] = personas[i];
-            }
-
-            contador--;
+            desplazarIzquierda(0);
             System.out.println(personaAtendida + " ha sido atendida.");
         } else {
             System.out.println("No hay personas en la fila.");
         }
     }
 
-    
-    
     public void eliminarPersona(String nombre) {
         for (int i = 0; i < contador; i++) {
             if (personas[i].equals(nombre)) {
-                for (int j = i + 1; j < contador; j++) {
-                    personas[j - 1] = personas[j];
-                }
-                contador--;
+                desplazarIzquierda(i);
                 System.out.println(nombre + " se ha ido de la fila.");
                 return;
             }
@@ -56,31 +45,43 @@ public class Fila {
         System.out.println("No se encuentra " + nombre + " en la fila.");
     }
 
-
-    public void traerCosas(String nombre) {
-        for (int i = 0; i < contador; i++) {
-            if (personas[i].equals(nombre)) {
-                System.out.println(nombre + " ha recibido cosas traídas.");
-                return;
-            }
+    
+    private void desplazarIzquierda(int desdeIndice) {
+        for (int i = desdeIndice + 1; i < contador; i++) {
+            personas[i - 1] = personas[i];
         }
-        System.out.println("No se encuentra " + nombre + " en la fila.");
+        contador--;
     }
 
-    public void colarseLicitamente(String nombre) {
+    public void traerCosas(String nombre) {
+        if (buscarIndice(nombre) != -1) {
+            System.out.println(nombre + " ha recibido cosas traídas.");
+        } else {
+            System.out.println("No se encuentra " + nombre + " en la fila.");
+        }
+    }
+
+    private int buscarIndice(String nombre) {
+        for (int i = 0; i < contador; i++) {
+            if (personas[i].equals(nombre)) return i;
+        }
+        return -1;
+    }
+
+    public void colarseAlInicio(String nombre) {
         if (contador < capacidad) {
             for (int i = contador; i > 0; i--) {
                 personas[i] = personas[i - 1];
             }
             personas[0] = nombre;
             contador++;
-            System.out.println(nombre + " se ha colado lícitamente al inicio de la fila.");
+            System.out.println(nombre + " se ha colado al inicio de la fila.");
         } else {
             System.out.println("La fila está llena.");
         }
     }
 
-    public void mensajeMuchaGente() {
+    public void notificarExcesoGente() {
         if (contador > 10) {
             System.out.println("Pasen por esta caja en orden de fila...");
         }
@@ -90,33 +91,24 @@ public class Fila {
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
             int accion = random.nextInt(5);
-            switch (accion) {
-                case 0:
-                    agregarPersona("Persona " + i);
-                    break;
-                case 1:
-                    atenderPersona();
-                    break;
-                case 2:
-                    if (contador > 0) {
-                        int indice = random.nextInt(contador);
-                        eliminarPersona(personas[indice]);
-                    }
-                    break;
-                case 3:
-                    if (contador > 0) {
-                        int indice = random.nextInt(contador);
-                        traerCosas(personas[indice]);
-                    }
-                    break;
-                case 4:
-                    colarseLicitamente("Persona " + i);
-                    break;
-            }
-            mensajeMuchaGente();
-
+            ejecutarAccion(accion, i, random);
+            notificarExcesoGente();
         }
+    }
 
+    private void ejecutarAccion(int accion, int id, Random random) {
+        String nombrePersona = "Persona " + id;
+        switch (accion) {
+            case 0 -> agregarPersona(nombrePersona);
+            case 1 -> atenderPersona();
+            case 2 -> {
+                if (contador > 0) eliminarPersona(personas[random.nextInt(contador)]);
+            }
+            case 3 -> {
+                if (contador > 0) traerCosas(personas[random.nextInt(contador)]);
+            }
+            case 4 -> colarseAlInicio(nombrePersona);
+        }
     }
 
     public static void main(String[] args) {
@@ -124,6 +116,4 @@ public class Fila {
         fila.abrirFila();
         fila.simularAcciones();
     }
-
 }
-    
